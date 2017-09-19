@@ -42,6 +42,16 @@ private:
 	std::vector <std::string> tokens;
 };
 
+void printVec(bool p, int t, std::vector<int> &vec) {
+	if (p) {
+		cout << t << " Sensors battery: ";
+		for (auto &v : vec) {
+			cout << v << " ";
+		}
+		cout << endl;
+	}
+}
+
 int main(int argc, char **argv) {
 	int lam = 1;
 	int s = 1;
@@ -52,6 +62,8 @@ int main(int argc, char **argv) {
 	int eon = 1;
 	int estb = 1;
 	int lifetime = 0;
+	bool simulative = false;
+	bool debugPrint = false;
 
 	//cout << "Begin!!!" << endl;
 
@@ -63,6 +75,18 @@ int main(int argc, char **argv) {
 	const std::string &energyBoot = input.getCmdOption("-eb");
 	const std::string &energyOn = input.getCmdOption("-eo");
 	const std::string &energyStb = input.getCmdOption("-es");
+	const std::string &isSimulative = input.getCmdOption("-sim");
+	const std::string &debugP = input.getCmdOption("-d");
+
+	if (!isSimulative.empty()) {
+		int tmp = atoi(isSimulative.c_str());
+		simulative = tmp != 0;
+	}
+
+	if (!debugP.empty()) {
+		int tmp = atoi(debugP.c_str());
+		debugPrint = tmp != 0;
+	}
 
 	if (!lambdaInput.empty()) {
 		lam = atoi(lambdaInput.c_str());
@@ -93,38 +117,145 @@ int main(int argc, char **argv) {
 	k = s / lam;
 	n4clusterPlus = (s % lam) + lam;
 
-	int lt_full = (einit - eboot) / (eon + estb);
+	if (simulative) {
+		std::vector<int> vecSensors(s, einit);
 
-	if (n4clusterPlus == lam) {
-		lifetime = k * lt_full;
-	}
-	else {
-		double st;
+		printVec(debugPrint, lifetime, vecSensors);
 
-		lifetime = (k - 1) * lt_full;
+		for (int i = 0; i < k; ++i) {
+			int idxB, idxE;
+			idxB = i * lam;
+			if ((i == k-1) && (n4clusterPlus != lam)) {
+				//int st = (einit - eboot) / (lam * (estb + eon));
+				int st = (einit - (2*eboot)) / (lam * (estb + eon));
+				int newIB, newIE, lastIB;
 
-		//st = (einit - eboot - eon) / (lam * estb);
-		st = (einit - eboot) / (lam * (estb + eon));
+				idxE = idxB + n4clusterPlus;
 
-		lifetime += st * n4clusterPlus;
+				newIB = idxB;
+				lastIB = newIB;
+				newIE = newIB + lam - 1;
 
-		if (st > 0) {
-			int residualEn = einit - (2 * eboot) - (st * lam * (estb + eon));
-			//cout << "ST: " << st << " - Remaining Energy: " << residualEn << endl;
+				for (int j = idxB; j < (idxB+lam); ++j) {
+					vecSensors[j] -= eboot;
+				}
 
-			if (residualEn < 0) {
-				lifetime = lifetime - 1;
+				while (newIB < s) {
+
+					for (int j = 0; j < st; ++j) {
+						bool okRound = true;
+
+						for (int jj = newIB; jj < (newIB+lam); ++jj) {
+							int idxx = ((jj-idxB) % n4clusterPlus) + idxB;
+							if (vecSensors[idxx] < (estb + eon)) {
+								okRound = false;
+								break;
+							}
+						}
+
+						if (okRound) {
+							for (int jj = newIB; jj < (newIB+lam); ++jj) {
+								//for (int jj = newIB; jj <= newIE; ++jj) {
+								int idxx = ((jj-idxB) % n4clusterPlus) + idxB;
+								vecSensors[idxx] -= estb + eon;
+							}
+							lastIB = newIB;
+							++lifetime;
+							printVec(debugPrint, lifetime, vecSensors);
+						}
+					}
+
+					++newIB;
+					++newIE;
+					if (newIE >= s) {
+						newIE = ((newIE-idxB) % n4clusterPlus) + idxB;
+					}
+					if (newIB < s) {
+						vecSensors[newIE] -= eboot;
+					}
+				}
+
+				bool okNewRound = true;
+				do {
+					for (int jj = lastIB; jj < (lastIB+lam); ++jj) {
+						int idxx = ((jj-idxB) % n4clusterPlus) + idxB;
+						if (vecSensors[idxx] < (estb + eon)) {
+							okNewRound = false;
+							break;
+						}
+					}
+
+					if (okNewRound) {
+						for (int jj = lastIB; jj < (lastIB+lam); ++jj) {
+							//for (int jj = newIB; jj <= newIE; ++jj) {
+							int idxx = ((jj-idxB) % n4clusterPlus) + idxB;
+							vecSensors[idxx] -= estb + eon;
+						}
+						++lifetime;
+						printVec(debugPrint, lifetime, vecSensors);
+					}
+				} while (okNewRound);
 			}
-			else if (residualEn > (estb + eon)) {
-				lifetime += residualEn / (estb + eon);
+			else {
+				idxE = idxB + lam;
+
+				for (int j = idxB; j < idxE; ++j) {
+					vecSensors[j] -= eboot;
+				}
+
+				while (vecSensors[idxB] >= (eon + estb)) {
+					for (int j = idxB; j < idxE; ++j) {
+						vecSensors[j] -= eon + estb;
+					}
+					++lifetime;
+					printVec(debugPrint, lifetime, vecSensors);
+				}
 			}
 		}
-		else {
-			int residualEn = einit - eboot;
-			//cout << "ST: " << st << " - Remaining Energy: " << residualEn << endl;
+	}
+	else {
+		int lt_full = (einit - eboot) / (eon + estb);
+		if (debugPrint) {
+			cout << "Lifetime of each lambda-cluster: " << lt_full << endl;
+		}
 
-			if (residualEn > (estb + eon)) {
-				lifetime += residualEn / (estb + eon);
+		if (n4clusterPlus == lam) {
+			lifetime = k * lt_full;
+		}
+		else {
+			//int st = (einit - eboot - eon) / (lam * estb);
+			int st = (einit - (2*eboot)) / (lam * (estb + eon));
+
+			lifetime = (k - 1) * lt_full;
+
+			lifetime += st * n4clusterPlus;
+
+			if (debugPrint) {
+				cout << "ST value: " << st << " - Sensors on last cluster: " << n4clusterPlus << endl;
+			}
+
+			if (st > 0) {
+				int residualEn = einit - (2 * eboot) - (st * lam * (estb + eon));
+				if (debugPrint) {
+					cout << "ST: " << st << " - Remaining Energy: " << residualEn << endl;
+				}
+
+				if (residualEn < 0) {
+					lifetime = lifetime - 1;
+				}
+				else if (residualEn >= (estb + eon)) {
+					lifetime += residualEn / (estb + eon);
+				}
+			}
+			else {
+				int residualEn = einit - eboot;
+				if (debugPrint) {
+					cout << "ST: " << st << " - Remaining Energy: " << residualEn << endl;
+				}
+
+				if (residualEn > (estb + eon)) {
+					lifetime += residualEn / (estb + eon);
+				}
 			}
 		}
 	}
