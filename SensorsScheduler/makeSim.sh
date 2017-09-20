@@ -4,7 +4,7 @@ OUTPUT_DIR="stats"
 EXEC="Release/SensorsScheduler"
 N_RUNS=$1
 
-for lambda in {4..25}
+for lambda in {3..25}
 do
 	MIN_SENSORS=`echo $(( lambda * 2 ))`
 	#echo "MIN_SENSORS $MIN_SENSORS"
@@ -31,9 +31,11 @@ do
 					do
 						#NOW_T=`date +"%F %T"`
 						#echo "$NOW_T s:$sensors l:$lambda einit:${EINIT} eboot:${EBOOT} eon:${EON} estb:${ESTB}"
+						
+						CLUSTERING=0
 					
-						RISNOSIM=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -sim 0`
-						RISSIM=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -sim 1`
+						RISNOSIM=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust ${CLUSTERING} -sim 0`
+						RISSIM=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust ${CLUSTERING} -sim 1`
 						
 						if [ $RISNOSIM -ne $RISSIM ]
 						then

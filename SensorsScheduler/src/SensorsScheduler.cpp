@@ -64,6 +64,9 @@ int main(int argc, char **argv) {
 	int lifetime = 0;
 	bool simulative = false;
 	bool debugPrint = false;
+	bool clustering = true;
+	bool onlyLP = false;
+	bool onlySW = false;
 
 	//cout << "Begin!!!" << endl;
 
@@ -77,6 +80,29 @@ int main(int argc, char **argv) {
 	const std::string &energyStb = input.getCmdOption("-es");
 	const std::string &isSimulative = input.getCmdOption("-sim");
 	const std::string &debugP = input.getCmdOption("-d");
+	const std::string &makeClusts = input.getCmdOption("-clust");
+	const std::string &onlySWstr = input.getCmdOption("-sw");
+	const std::string &onlyLPstr = input.getCmdOption("-lp");
+
+	if (!onlySWstr.empty()) {
+		int tmp = atoi(onlySWstr.c_str());
+		onlySW = tmp != 0;
+	}
+
+	if (!onlyLPstr.empty()) {
+		int tmp = atoi(onlyLPstr.c_str());
+		onlyLP = tmp != 0;
+	}
+
+	if (onlyLP && onlySW) {
+		cerr << "Error: onlyLP and onlySW are both true. Set at most one of them." << endl;
+		return EXIT_FAILURE;
+	}
+
+	if (!makeClusts.empty()) {
+		int tmp = atoi(makeClusts.c_str());
+		clustering = tmp != 0;
+	}
 
 	if (!isSimulative.empty()) {
 		int tmp = atoi(isSimulative.c_str());
@@ -114,8 +140,15 @@ int main(int argc, char **argv) {
 		return EXIT_FAILURE;
 	}
 
-	k = s / lam;
-	n4clusterPlus = (s % lam) + lam;
+
+	if (clustering) {
+		k = s / lam;
+		n4clusterPlus = (s % lam) + lam;
+	}
+	else {
+		k = 1;
+		n4clusterPlus = s;
+	}
 
 	if (simulative) {
 		std::vector<int> vecSensors(s, einit);
@@ -127,7 +160,7 @@ int main(int argc, char **argv) {
 			idxB = i * lam;
 			if ((i == k-1) && (n4clusterPlus != lam)) {
 				//int st = (einit - eboot) / (lam * (estb + eon));
-				int st = (einit - (2*eboot)) / (lam * (estb + eon));
+				int st = (einit - eboot) / (lam * (estb + eon));
 				int newIB, newIE, lastIB;
 
 				idxE = idxB + n4clusterPlus;
@@ -136,9 +169,9 @@ int main(int argc, char **argv) {
 				lastIB = newIB;
 				newIE = newIB + lam - 1;
 
-				for (int j = idxB; j < (idxB+lam); ++j) {
+				/*for (int j = idxB; j < (idxB+lam); ++j) {
 					vecSensors[j] -= eboot;
-				}
+				}*/
 
 				while (newIB < s) {
 
@@ -176,6 +209,7 @@ int main(int argc, char **argv) {
 				}
 
 				bool okNewRound = true;
+				int newRoundNTry = n4clusterPlus / lam;
 				do {
 					for (int jj = lastIB; jj < (lastIB+lam); ++jj) {
 						int idxx = ((jj-idxB) % n4clusterPlus) + idxB;
@@ -193,6 +227,13 @@ int main(int argc, char **argv) {
 						}
 						++lifetime;
 						printVec(debugPrint, lifetime, vecSensors);
+					}
+					else {
+						lastIB = ((lastIB + lam - idxB) % n4clusterPlus) + idxB;
+						if (newRoundNTry > 0) {
+							okNewRound = true;
+							--newRoundNTry;
+						}
 					}
 				} while (okNewRound);
 			}
@@ -224,7 +265,7 @@ int main(int argc, char **argv) {
 		}
 		else {
 			//int st = (einit - eboot - eon) / (lam * estb);
-			int st = (einit - (2*eboot)) / (lam * (estb + eon));
+			int st = (einit - eboot) / (lam * (estb + eon));
 
 			lifetime = (k - 1) * lt_full;
 
@@ -235,7 +276,7 @@ int main(int argc, char **argv) {
 			}
 
 			if (st > 0) {
-				int residualEn = einit - (2 * eboot) - (st * lam * (estb + eon));
+				int residualEn = einit - eboot - (st * lam * (estb + eon));
 				if (debugPrint) {
 					cout << "ST: " << st << " - Remaining Energy: " << residualEn << endl;
 				}
