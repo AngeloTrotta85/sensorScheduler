@@ -98,7 +98,7 @@ do
 						#RISLP=0
 						
 						echo -n "Rand... "
-						$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -d 0 -rand 1
+						#$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -d 0 -rand 1
 						RISRAND=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -d 0 -rand 1`
 						#RISRAND=0
 						
