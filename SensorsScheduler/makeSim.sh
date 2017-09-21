@@ -51,7 +51,8 @@ do
 				for EON in 494
 				do			
 					ESTB_uW=10	
-					TSLOT_VAR="60 250 500 750 1000"
+					#TSLOT_VAR="60 250 500 750 1000"
+					TSLOT_VAR="500 750 1000"
 					
 					#ESTB_60=`echo $(( ESTB_uW * 60 ))`
 					#ESTB_250=`echo $(( ESTB_uW * 250 ))`
@@ -70,7 +71,7 @@ do
 						#echo "$NOW_T s:$sensors l:$lambda einit:${EINIT} eboot:${EBOOT} eon:${EON} estb:${ESTB}"						
 						
 						NOW_LS=`date +"%F %T"`
-						echo "$NOW_LS Experiment with s:$sensors l:$lambda einit:${EINIT} tslot:${TSLOT}"
+						echo "$NOW_LS Experiment with s:$sensors l:$lambda binit:${BATT_INIT} tslot:${TSLOT} einit:${EINIT} eboot:${EBOOT} eon:${EON} estb:${ESTB}"
 						
 						#CLUSTERING=0
 					
@@ -83,13 +84,26 @@ do
 						#fi
 						#echo -n ""
 						
+						echo -n "Nostro... "
 						RISNOSTRO=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 1 -d 0 -sw 0 -lp 0 -sim 0`
+						
+						echo -n "NoClust... "
 						RISNOCLUST=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 0 -d 0 -sw 0 -lp 0 -sim 0`
+						
+						echo -n "OnlySW... "
 						RISSW=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 1 -d 0 -sw 1 -lp 0 -sim 0`
+						
+						echo -n "OnlyLP... "
 						RISLP=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 1 -d 0 -sw 0 -lp 1 -sim 1`
-						RISRAND=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 1 -d 0 -sw 0 -lp 0 -rand 1 -sim 1`
 						#RISLP=0
+						
+						echo -n "Rand... "
+						$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -d 0 -rand 1
+						RISRAND=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -d 0 -rand 1`
 						#RISRAND=0
+						
+						echo "OK!"
+						echo ""
 						
 						
 						

@@ -185,6 +185,8 @@ int main(int argc, char **argv) {
 			it->second = false;
 		}*/
 
+		//cout << "Making random" << endl;
+
 		printVec2(debugPrint, lifetime, vecSensors);
 
 		while ((int)vecSensors.size() >= lam) {
@@ -218,10 +220,20 @@ int main(int argc, char **argv) {
 
 			for (auto& ii : lamIdx) {
 				if (vecSensors[ii].second) {
-					vecSensors[ii].first -= eon;
+					if (vecSensors[ii].first <= eon) {
+						vecSensors[ii].first = 0;
+					}
+					else {
+						vecSensors[ii].first -= eon;
+					}
 				}
 				else {
-					vecSensors[ii].first -= eon + eboot;
+					if (vecSensors[ii].first <= (eon + eboot)) {
+						vecSensors[ii].first = 0;
+					}
+					else {
+						vecSensors[ii].first -= eon + eboot;
+					}
 				}
 
 				if ((rand() % 2) == 0) {
@@ -234,7 +246,12 @@ int main(int argc, char **argv) {
 
 			for (auto it = vecSensors.begin(); it != vecSensors.end(); it++) {
 				if (it->second) {
-					it->first = it->first - estb;
+					if (it->first <= estb) {
+						it->first = 0;
+					}
+					else {
+						it->first = it->first - estb;
+					}
 				}
 			}
 
@@ -242,6 +259,11 @@ int main(int argc, char **argv) {
 
 			++lifetime;
 			printVec2(debugPrint, lifetime, vecSensors);
+
+
+			/*if ((rand() % 1000) < 2) {
+				printVec2(true, lifetime, vecSensors);
+			}*/
 
 			bool removed;
 			do {
