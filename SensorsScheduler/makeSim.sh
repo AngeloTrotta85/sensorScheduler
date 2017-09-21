@@ -30,13 +30,18 @@ do
 			continue
 		fi
 		
-		NOW_LS=`date +"%F %T"`
-		echo "$NOW_LS s:$sensors l:$lambda"
+		#NOW_LS=`date +"%F %T"`
+		#echo "$NOW_LS s:$sensors l:$lambda"
+		
+		BATT_VAR="600 1000 1400 1800"
 		
 		#for (( EINIT=1000; EINIT<=5000; EINIT+=1000 ))
 		#for (( EINIT=1000; EINIT<=5000; EINIT+=2000 ))
-		for EINIT in ${EINIT_VAR}
+		#for EINIT in ${EINIT_VAR}
+		for BATT_INIT in ${BATT_VAR}
 		do
+			EINIT=`echo "$BATT_INIT * 39.96" | bc -l | awk '{printf "%.0f", $0}'`
+			
 			#for (( EBOOT=20; EBOOT<=100; EBOOT+=20 ))
 			#for (( EBOOT=20; EBOOT<=100; EBOOT+=40 ))
 			for EBOOT in 7500
@@ -62,7 +67,10 @@ do
 					do
 						ESTB=`echo $(( ESTB_uW * TSLOT ))`
 						#NOW_T=`date +"%F %T"`
-						#echo "$NOW_T s:$sensors l:$lambda einit:${EINIT} eboot:${EBOOT} eon:${EON} estb:${ESTB}"
+						#echo "$NOW_T s:$sensors l:$lambda einit:${EINIT} eboot:${EBOOT} eon:${EON} estb:${ESTB}"						
+						
+						NOW_LS=`date +"%F %T"`
+						echo "$NOW_LS Experiment with s:$sensors l:$lambda einit:${EINIT} tslot:${TSLOT}"
 						
 						#CLUSTERING=0
 					
@@ -160,33 +168,31 @@ do
 						#echo "H: Nostro: ${RISNOSTRO_HOURS}; NoClust: ${RISNOCLUST_HOURS}; OnlySW: ${RISSW_HOURS}; OnlyLP: ${RISLP_HOURS}; Rand: ${RISRAND_HOURS}"
 						#echo ""
 						
-						echo "Experiment with s:$sensors l:$lambda einit:${EINIT} tslot:${TSLOT}"
 						
+						echo "$lambda $RISNOSTRO" >> "$OUTPUT_DIR/nostro_s${sensors}_ts${TSLOT}_bi${BATT_INIT}.data"
+						echo "$sensors $RISNOSTRO" >> "$OUTPUT_DIR/nostro_l${lambda}_ts${TSLOT}_bi${BATT_INIT}.data"
+						echo "$TSLOT $RISNOSTRO" >> "$OUTPUT_DIR/nostro_s${sensors}_l${lambda}_bi${BATT_INIT}.data"
+						echo "$BATT_INIT $RISNOSTRO" >> "$OUTPUT_DIR/nostro_s${sensors}_ts${TSLOT}_l${lambda}.data"
 						
-						echo "$lambda $RISNOSTRO" >> "$OUTPUT_DIR/nostro_s${sensors}_ts${TSLOT}_ei${EINIT}.data"
-						echo "$sensors $RISNOSTRO" >> "$OUTPUT_DIR/nostro_l${lambda}_ts${TSLOT}_ei${EINIT}.data"
-						echo "$TSLOT $RISNOSTRO" >> "$OUTPUT_DIR/nostro_s${sensors}_l${lambda}_ei${EINIT}.data"
-						echo "$EINIT $RISNOSTRO" >> "$OUTPUT_DIR/nostro_s${sensors}_ts${TSLOT}_l${lambda}.data"
+						echo "$lambda $RISNOCLUST" >> "$OUTPUT_DIR/noclust_s${sensors}_ts${TSLOT}_bi${BATT_INIT}.data"
+						echo "$sensors $RISNOCLUST" >> "$OUTPUT_DIR/noclust_l${lambda}_ts${TSLOT}_bi${BATT_INIT}.data"
+						echo "$TSLOT $RISNOCLUST" >> "$OUTPUT_DIR/noclust_s${sensors}_l${lambda}_bi${BATT_INIT}.data"
+						echo "$BATT_INIT $RISNOCLUST" >> "$OUTPUT_DIR/noclust_s${sensors}_ts${TSLOT}_l${lambda}.data"
 						
-						echo "$lambda $RISNOCLUST" >> "$OUTPUT_DIR/noclust_s${sensors}_ts${TSLOT}_ei${EINIT}.data"
-						echo "$sensors $RISNOCLUST" >> "$OUTPUT_DIR/noclust_l${lambda}_ts${TSLOT}_ei${EINIT}.data"
-						echo "$TSLOT $RISNOCLUST" >> "$OUTPUT_DIR/noclust_s${sensors}_l${lambda}_ei${EINIT}.data"
-						echo "$EINIT $RISNOCLUST" >> "$OUTPUT_DIR/noclust_s${sensors}_ts${TSLOT}_l${lambda}.data"
+						echo "$lambda $RISSW" >> "$OUTPUT_DIR/onlysw_s${sensors}_ts${TSLOT}_bi${BATT_INIT}.data"
+						echo "$sensors $RISSW" >> "$OUTPUT_DIR/onlysw_l${lambda}_ts${TSLOT}_bi${BATT_INIT}.data"
+						echo "$TSLOT $RISSW" >> "$OUTPUT_DIR/onlysw_s${sensors}_l${lambda}_bi${BATT_INIT}.data"
+						echo "$BATT_INIT $RISSW" >> "$OUTPUT_DIR/onlysw_s${sensors}_ts${TSLOT}_l${lambda}.data"
 						
-						echo "$lambda $RISSW" >> "$OUTPUT_DIR/onlysw_s${sensors}_ts${TSLOT}_ei${EINIT}.data"
-						echo "$sensors $RISSW" >> "$OUTPUT_DIR/onlysw_l${lambda}_ts${TSLOT}_ei${EINIT}.data"
-						echo "$TSLOT $RISSW" >> "$OUTPUT_DIR/onlysw_s${sensors}_l${lambda}_ei${EINIT}.data"
-						echo "$EINIT $RISSW" >> "$OUTPUT_DIR/onlysw_s${sensors}_ts${TSLOT}_l${lambda}.data"
+						echo "$lambda $RISLP" >> "$OUTPUT_DIR/onlysw_s${sensors}_ts${TSLOT}_bi${BATT_INIT}.data"
+						echo "$sensors $RISLP" >> "$OUTPUT_DIR/onlysw_l${lambda}_ts${TSLOT}_bi${BATT_INIT}.data"
+						echo "$TSLOT $RISLP" >> "$OUTPUT_DIR/onlysw_s${sensors}_l${lambda}_bi${BATT_INIT}.data"
+						echo "$BATT_INIT $RISLP" >> "$OUTPUT_DIR/onlysw_s${sensors}_ts${TSLOT}_l${lambda}.data"
 						
-						echo "$lambda $RISLP" >> "$OUTPUT_DIR/onlysw_s${sensors}_ts${TSLOT}_ei${EINIT}.data"
-						echo "$sensors $RISLP" >> "$OUTPUT_DIR/onlysw_l${lambda}_ts${TSLOT}_ei${EINIT}.data"
-						echo "$TSLOT $RISLP" >> "$OUTPUT_DIR/onlysw_s${sensors}_l${lambda}_ei${EINIT}.data"
-						echo "$EINIT $RISLP" >> "$OUTPUT_DIR/onlysw_s${sensors}_ts${TSLOT}_l${lambda}.data"
-						
-						echo "$lambda $RISRAND" >> "$OUTPUT_DIR/rand_s${sensors}_ts${TSLOT}_ei${EINIT}.data"
-						echo "$sensors $RISRAND" >> "$OUTPUT_DIR/rand_l${lambda}_ts${TSLOT}_ei${EINIT}.data"
-						echo "$TSLOT $RISRAND" >> "$OUTPUT_DIR/rand_s${sensors}_l${lambda}_ei${EINIT}.data"
-						echo "$EINIT $RISRAND" >> "$OUTPUT_DIR/rand_s${sensors}_ts${TSLOT}_l${lambda}.data"
+						echo "$lambda $RISRAND" >> "$OUTPUT_DIR/rand_s${sensors}_ts${TSLOT}_bi${BATT_INIT}.data"
+						echo "$sensors $RISRAND" >> "$OUTPUT_DIR/rand_l${lambda}_ts${TSLOT}_bi${BATT_INIT}.data"
+						echo "$TSLOT $RISRAND" >> "$OUTPUT_DIR/rand_s${sensors}_l${lambda}_bi${BATT_INIT}.data"
+						echo "$BATT_INIT $RISRAND" >> "$OUTPUT_DIR/rand_s${sensors}_ts${TSLOT}_l${lambda}.data"
 						
 					done
 				done
