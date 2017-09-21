@@ -42,7 +42,7 @@ private:
 	std::vector <std::string> tokens;
 };
 
-void printVec(bool p, int t, std::vector<int> &vec) {
+void printVec(bool p, int t, std::vector<unsigned long int> &vec) {
 	if (p) {
 		cout << t << " Sensors battery: ";
 		for (auto &v : vec) {
@@ -52,7 +52,7 @@ void printVec(bool p, int t, std::vector<int> &vec) {
 	}
 }
 
-void printVec2(bool p, int t, std::vector<std::pair<int, bool> > &vec) {
+void printVec2(bool p, int t, std::vector<std::pair<unsigned long int, bool> > &vec) {
 	if (p) {
 		cout << t << " Sensors battery: ";
 		for (auto &v : vec) {
@@ -67,16 +67,16 @@ int main(int argc, char **argv) {
 	int s = 1;
 	int k;
 	int n4clusterPlus;
-	int einit = 100;
-	int eboot = 1;
-	int eon = 1;
-	int estb = 1;
+	unsigned long int einit = 100;
+	unsigned long int eboot = 1;
+	unsigned long int eon = 1;
+	unsigned long int estb = 1;
 	int lifetime = 0;
 	bool simulative = false;
 	bool debugPrint = false;
 	bool clustering = true;
 	bool onlyLP = false;
-	int estbLP;
+	unsigned long int estbLP;
 	bool onlySW = false;
 	bool randomSim = false;
 
@@ -142,6 +142,7 @@ int main(int argc, char **argv) {
 
 	if (!energyInit.empty()) {
 		einit = atoi(energyInit.c_str());
+		einit = einit * 1000000; // converting J in uJ
 	}
 	if (!energyBoot.empty()) {
 		eboot = atoi(energyBoot.c_str());
@@ -178,7 +179,7 @@ int main(int argc, char **argv) {
 	}
 
 	if (randomSim) {
-		std::vector<std::pair<int, bool> > vecSensors(s, make_pair(einit, false));
+		std::vector<std::pair<unsigned long int, bool> > vecSensors(s, make_pair(einit, false));
 		/*for (auto it = vecSensors.begin(); it != vecSensors.end(); it++) {
 			it->first = einit;
 			it->second = false;
@@ -259,7 +260,7 @@ int main(int argc, char **argv) {
 	else {
 
 		if (simulative) {
-			std::vector<int> vecSensors(s, einit);
+			std::vector<unsigned long int> vecSensors(s, einit);
 
 			printVec(debugPrint, lifetime, vecSensors);
 
@@ -423,7 +424,7 @@ int main(int argc, char **argv) {
 				}
 
 				if (st > 0) {
-					int residualEn = einit - eboot - (st * lam * (estb + eon));
+					unsigned long int residualEn = einit - eboot - (st * lam * (estb + eon));
 					if (debugPrint) {
 						cout << "ST: " << st << " - Remaining Energy: " << residualEn << endl;
 					}
@@ -436,7 +437,7 @@ int main(int argc, char **argv) {
 					}
 				}
 				else {
-					int residualEn = einit - eboot;
+					unsigned long int residualEn = einit - eboot;
 					if (debugPrint) {
 						cout << "ST: " << st << " - Remaining Energy: " << residualEn << endl;
 					}
