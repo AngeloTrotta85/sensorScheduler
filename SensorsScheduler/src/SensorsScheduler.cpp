@@ -328,13 +328,22 @@ int main(int argc, char **argv) {
 								for (int jj = newIB; jj < (newIB+lam); ++jj) {
 									//for (int jj = newIB; jj <= newIE; ++jj) {
 									int idxx = ((jj-idxB) % n4clusterPlus) + idxB;
-									vecSensors[idxx] -= estb + eon;
+									if (vecSensors[idxx] <= (estb + eon)) {
+										vecSensors[idxx] = 0;
+									}
+									else {
+										vecSensors[idxx] -= estb + eon;
+									}
 								}
 								lastIB = newIB;
 								if (onlyLP) {
 									for (auto& v : vecSensors) {
-										v -= estbLP;
-										if (v < 0) v = 0;
+										if (v <= estbLP) {
+											v = 0;
+										}
+										else {
+											v -= estbLP;
+										}
 									}
 								}
 								++lifetime;
@@ -367,12 +376,21 @@ int main(int argc, char **argv) {
 							for (int jj = lastIB; jj < (lastIB+lam); ++jj) {
 								//for (int jj = newIB; jj <= newIE; ++jj) {
 								int idxx = ((jj-idxB) % n4clusterPlus) + idxB;
-								vecSensors[idxx] -= estb + eon;
+								if (vecSensors[idxx] <= (estb + eon)) {
+									vecSensors[idxx] = 0;
+								}
+								else {
+									vecSensors[idxx] -= estb + eon;
+								}
 							}
 							if (onlyLP) {
 								for (auto& v : vecSensors) {
-									v -= estbLP;
-									if (v < 0) v = 0;
+									if (v <= estbLP) {
+										v = 0;
+									}
+									else {
+										v -= estbLP;
+									}
 								}
 							}
 
@@ -392,17 +410,31 @@ int main(int argc, char **argv) {
 					idxE = idxB + lam;
 
 					for (int j = idxB; j < idxE; ++j) {
-						vecSensors[j] -= eboot;
+						if (vecSensors[j] <= eboot) {
+							vecSensors[j] = 0;
+						}
+						else {
+							vecSensors[j] -= eboot;
+						}
 					}
 
 					if (onlyLP) {
 						while (vecSensors[idxB] >= (eon + estbLP)) {
 							for (int j = idxB; j < idxE; ++j) {
-								vecSensors[j] -= eon;
+								if (vecSensors[j] <= eon) {
+									vecSensors[j] = 0;
+								}
+								else {
+									vecSensors[j] -= eon;
+								}
 							}
 							for (auto& v : vecSensors) {
-								v -= estbLP;
-								if (v < 0) v = 0;
+								if (v <= estbLP) {
+									v = 0;
+								}
+								else {
+									v -= estbLP;
+								}
 							}
 
 							++lifetime;
@@ -412,7 +444,12 @@ int main(int argc, char **argv) {
 					else {
 						while (vecSensors[idxB] >= (eon + estb)) {
 							for (int j = idxB; j < idxE; ++j) {
-								vecSensors[j] -= eon + estb;
+								if (vecSensors[j] <= (eon + estb)) {
+									vecSensors[j] = 0;
+								}
+								else {
+									vecSensors[j] -= eon + estb;
+								}
 							}
 
 							++lifetime;
