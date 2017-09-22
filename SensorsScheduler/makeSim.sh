@@ -40,7 +40,8 @@ do
 		#echo "$NOW_LS s:$sensors l:$lambda"
 		#continue
 		
-		BATT_VAR="600 1000 1400 1800"
+		#BATT_VAR="200 600 1000 1400 1800"
+		BATT_VAR="500 750 1000 1250 1500"
 		
 		#for (( EINIT=1000; EINIT<=5000; EINIT+=1000 ))
 		#for (( EINIT=1000; EINIT<=5000; EINIT+=2000 ))
@@ -58,8 +59,8 @@ do
 				for EON in 494
 				do			
 					ESTB_uW=10	
-					#TSLOT_VAR="60 250 500 750 1000"
-					TSLOT_VAR="500 750 1000"
+					TSLOT_VAR="60 250 500 750 1000"
+					#TSLOT_VAR="500 750 1000"
 					
 					#ESTB_60=`echo $(( ESTB_uW * 60 ))`
 					#ESTB_250=`echo $(( ESTB_uW * 250 ))`
@@ -205,10 +206,10 @@ do
 						echo "$TSLOT $RISSW" >> "$OUTPUT_DIR/onlysw_s${sensors}_l${lambda}_bi${BATT_INIT}.data"
 						echo "$BATT_INIT $RISSW" >> "$OUTPUT_DIR/onlysw_s${sensors}_ts${TSLOT}_l${lambda}.data"
 						
-						echo "$lambda $RISLP" >> "$OUTPUT_DIR/onlysw_s${sensors}_ts${TSLOT}_bi${BATT_INIT}.data"
-						echo "$sensors $RISLP" >> "$OUTPUT_DIR/onlysw_l${lambda}_ts${TSLOT}_bi${BATT_INIT}.data"
-						echo "$TSLOT $RISLP" >> "$OUTPUT_DIR/onlysw_s${sensors}_l${lambda}_bi${BATT_INIT}.data"
-						echo "$BATT_INIT $RISLP" >> "$OUTPUT_DIR/onlysw_s${sensors}_ts${TSLOT}_l${lambda}.data"
+						echo "$lambda $RISLP" >> "$OUTPUT_DIR/onlylp_s${sensors}_ts${TSLOT}_bi${BATT_INIT}.data"
+						echo "$sensors $RISLP" >> "$OUTPUT_DIR/onlylp_l${lambda}_ts${TSLOT}_bi${BATT_INIT}.data"
+						echo "$TSLOT $RISLP" >> "$OUTPUT_DIR/onlylp_s${sensors}_l${lambda}_bi${BATT_INIT}.data"
+						echo "$BATT_INIT $RISLP" >> "$OUTPUT_DIR/onlylp_s${sensors}_ts${TSLOT}_l${lambda}.data"
 						
 						echo "$lambda $RISRAND" >> "$OUTPUT_DIR/rand_s${sensors}_ts${TSLOT}_bi${BATT_INIT}.data"
 						echo "$sensors $RISRAND" >> "$OUTPUT_DIR/rand_l${lambda}_ts${TSLOT}_bi${BATT_INIT}.data"
