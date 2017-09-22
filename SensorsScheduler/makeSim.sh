@@ -2,7 +2,13 @@
 
 OUTPUT_DIR="stats"
 EXEC="Release/SensorsScheduler"
-N_RUNS=$1
+INIT_LAMBDA=$1
+STEP_LAMBDA=$2
+
+if [ $# -ne 2 ]
+then
+	echo "Usage: $0 initLambda skipLambda"
+fi
 
 EINIT_600=23976
 EINIT_1000=39960
@@ -15,11 +21,12 @@ EINIT_VAR="$EINIT_600 $EINIT_1000 $EINIT_1400 $EINIT_1800"
 #done
 #exit
 
-
-for lambda in {3..25}
+for (( lambda=INIT_LAMBDA; lambda<=25; lambda+=STEP_LAMBDA ))
+#for lambda in {3..25}
 do
 	MIN_SENSORS=`echo $(( lambda * 2 ))`
 	#echo "MIN_SENSORS $MIN_SENSORS"
+	
 	
 	#for sensors in {0..150..2}
 	#for (( sensors=MIN_SENSORS; sensors<=150; sensors+=lambda ))
@@ -32,6 +39,7 @@ do
 		
 		#NOW_LS=`date +"%F %T"`
 		#echo "$NOW_LS s:$sensors l:$lambda"
+		#continue
 		
 		BATT_VAR="600 1000 1400 1800"
 		
