@@ -27,7 +27,6 @@ do
 	MIN_SENSORS=`echo $(( lambda * 2 ))`
 	#echo "MIN_SENSORS $MIN_SENSORS"
 	
-	
 	#for sensors in {0..150..2}
 	#for (( sensors=MIN_SENSORS; sensors<=150; sensors+=lambda ))
 	for (( sensors=MIN_SENSORS; sensors<=120; sensors+=1 ))
