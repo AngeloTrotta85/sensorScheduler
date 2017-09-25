@@ -79,6 +79,9 @@ int main(int argc, char **argv) {
 	unsigned long int estbLP;
 	bool onlySW = false;
 	bool randomSim = false;
+	double selfDischarge = 1;
+	double tslot = 1;
+	long double selfDischargePerSlot = 1;
 
 	//cout << "Begin!!!" << endl;
 
@@ -96,6 +99,8 @@ int main(int argc, char **argv) {
 	const std::string &onlySWstr = input.getCmdOption("-sw");
 	const std::string &onlyLPstr = input.getCmdOption("-lp");
 	const std::string &random_str = input.getCmdOption("-rand");
+	const std::string &selfDischarge_str = input.getCmdOption("-sd");
+	const std::string &timeSlot_str = input.getCmdOption("-ts");
 
 	if (!random_str.empty()) {
 		int tmp = atoi(random_str.c_str());
@@ -132,6 +137,14 @@ int main(int argc, char **argv) {
 		debugPrint = tmp != 0;
 	}
 
+	if (!timeSlot_str.empty()) {
+		tslot = atof(timeSlot_str.c_str());
+	}
+
+	if (!selfDischarge_str.empty()) {
+		selfDischarge = atof(selfDischarge_str.c_str());
+	}
+
 	if (!lambdaInput.empty()) {
 		lam = atoi(lambdaInput.c_str());
 	}
@@ -157,6 +170,22 @@ int main(int argc, char **argv) {
 	if (s < lam) {
 		cerr << "The sensors number is less then the lambda value" << endl;
 		return EXIT_FAILURE;
+	}
+
+	if (selfDischarge > 0) {
+		// selfDischarge is per months
+		long double selfDischargeRatio = selfDischarge / 100.0;
+		long double slotsPerMonth = (30.0 * 24.0 * 60.0 * 60.0) / tslot;
+
+		selfDischargePerSlot = powl(selfDischargeRatio, 1.0 / slotsPerMonth);
+
+		//cout << "selfDischargeRatio: " << selfDischargeRatio << " -  slotsPerMonth: " << slotsPerMonth << endl;
+		//fprintf (stdout, "Self-discharge per slot: %Lf\n", selfDischargePerSlot);
+		//cout << "Self-discharge per slot: " << selfDischargePerSlot << endl;
+		//exit(0);
+	}
+	else {
+		selfDischargePerSlot = 1.0;
 	}
 
 	estbLP = estb;
@@ -346,6 +375,12 @@ int main(int argc, char **argv) {
 										}
 									}
 								}
+
+								// remove the self-discharging
+								for (unsigned int j = 0; j < vecSensors.size(); ++j) {
+									vecSensors[j] = (long double)(((long double) vecSensors[j]) * selfDischargePerSlot);
+								}
+
 								++lifetime;
 								printVec(debugPrint, lifetime, vecSensors);
 							}
@@ -394,6 +429,11 @@ int main(int argc, char **argv) {
 								}
 							}
 
+							// remove the self-discharging
+							for (unsigned int j = 0; j < vecSensors.size(); ++j) {
+								vecSensors[j] = (long double)(((long double) vecSensors[j]) * selfDischargePerSlot);
+							}
+
 							++lifetime;
 							printVec(debugPrint, lifetime, vecSensors);
 						}
@@ -437,6 +477,11 @@ int main(int argc, char **argv) {
 								}
 							}
 
+							// remove the self-discharging
+							for (unsigned int j = 0; j < vecSensors.size(); ++j) {
+								vecSensors[j] = (long double)(((long double) vecSensors[j]) * selfDischargePerSlot);
+							}
+
 							++lifetime;
 							printVec(debugPrint, lifetime, vecSensors);
 						}
@@ -450,6 +495,11 @@ int main(int argc, char **argv) {
 								else {
 									vecSensors[j] -= eon + estb;
 								}
+							}
+
+							// remove the self-discharging
+							for (unsigned int j = 0; j < vecSensors.size(); ++j) {
+								vecSensors[j] = (long double)(((long double) vecSensors[j]) * selfDischargePerSlot);
 							}
 
 							++lifetime;

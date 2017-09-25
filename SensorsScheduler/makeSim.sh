@@ -41,14 +41,16 @@ do
 		#continue
 		
 		#BATT_VAR="200 600 1000 1400 1800"
-		BATT_VAR="500 750 1000 1250 1500"
+		#BATT_VAR="500 750 1000 1250 1500"
+		BATT_VAR="300 500 700"
 		
 		#for (( EINIT=1000; EINIT<=5000; EINIT+=1000 ))
 		#for (( EINIT=1000; EINIT<=5000; EINIT+=2000 ))
 		#for EINIT in ${EINIT_VAR}
 		for BATT_INIT in ${BATT_VAR}
 		do
-			EINIT=`echo "$BATT_INIT * 39.96" | bc -l | awk '{printf "%.0f", $0}'`
+			#EINIT=`echo "$BATT_INIT * 39.96" | bc -l | awk '{printf "%.0f", $0}'`
+			EINIT=`echo "$BATT_INIT * 26.64" | bc -l | awk '{printf "%.0f", $0}'`
 			
 			#for (( EBOOT=20; EBOOT<=100; EBOOT+=20 ))
 			#for (( EBOOT=20; EBOOT<=100; EBOOT+=40 ))
@@ -59,7 +61,7 @@ do
 				for EON in 494
 				do			
 					ESTB_uW=10	
-					TSLOT_VAR="60 300 600 900 1200"
+					TSLOT_VAR="1 10 60 600"
 					#TSLOT_VAR="500 750 1000"
 					
 					#ESTB_60=`echo $(( ESTB_uW * 60 ))`
