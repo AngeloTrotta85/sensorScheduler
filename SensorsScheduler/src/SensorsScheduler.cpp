@@ -284,7 +284,10 @@ int main(int argc, char **argv) {
 				}
 			}
 
-
+			// remove the self-discharging
+			for (unsigned int j = 0; j < vecSensors.size(); ++j) {
+				vecSensors[j].first = (long double)(((long double) vecSensors[j].first) * selfDischargePerSlot);
+			}
 
 			++lifetime;
 			printVec2(debugPrint, lifetime, vecSensors);
