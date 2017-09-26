@@ -94,8 +94,14 @@ do
 						#fi
 						#echo -n ""
 						
-						echo -n "Nostro... "
-						RISNOSTRO=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 1 -d 0 -sw 0 -lp 0 -sim 1 -sd 8 -ts ${TSLOT}`
+						#echo -n "Nostro... "
+						#RISNOSTRO=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 1 -d 0 -sw 0 -lp 0 -sim 1 -sd 8 -ts ${TSLOT}`
+						
+						echo -n "Nostro (dST 0)... "
+						RISNOSTRO0=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 1 -d 0 -sw 0 -lp 0 -sim 1 -sd 8 -ts ${TSLOT} -stDy 0`
+						
+						echo -n "Nostro (dST 1)... "
+						RISNOSTRO1=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 1 -d 0 -sw 0 -lp 0 -sim 1 -sd 8 -ts ${TSLOT}-stDy 1`
 						
 						echo -n "NoClust... "
 						RISNOCLUST=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 0 -d 0 -sw 0 -lp 0 -sim 1 -sd 8 -ts ${TSLOT}`
@@ -193,10 +199,20 @@ do
 						#echo ""
 						
 						
-						echo "$lambda $RISNOSTRO" >> "$OUTPUT_DIR/nostro_s${sensors}_ts${TSLOT}_bi${BATT_INIT}.data"
-						echo "$sensors $RISNOSTRO" >> "$OUTPUT_DIR/nostro_l${lambda}_ts${TSLOT}_bi${BATT_INIT}.data"
-						echo "$TSLOT $RISNOSTRO" >> "$OUTPUT_DIR/nostro_s${sensors}_l${lambda}_bi${BATT_INIT}.data"
-						echo "$BATT_INIT $RISNOSTRO" >> "$OUTPUT_DIR/nostro_s${sensors}_ts${TSLOT}_l${lambda}.data"
+						#echo "$lambda $RISNOSTRO" >> "$OUTPUT_DIR/nostro_s${sensors}_ts${TSLOT}_bi${BATT_INIT}.data"
+						#echo "$sensors $RISNOSTRO" >> "$OUTPUT_DIR/nostro_l${lambda}_ts${TSLOT}_bi${BATT_INIT}.data"
+						#echo "$TSLOT $RISNOSTRO" >> "$OUTPUT_DIR/nostro_s${sensors}_l${lambda}_bi${BATT_INIT}.data"
+						#echo "$BATT_INIT $RISNOSTRO" >> "$OUTPUT_DIR/nostro_s${sensors}_ts${TSLOT}_l${lambda}.data"
+						
+						echo "$lambda $RISNOSTRO0" >> "$OUTPUT_DIR/nostro0_s${sensors}_ts${TSLOT}_bi${BATT_INIT}.data"
+						echo "$sensors $RISNOSTRO0" >> "$OUTPUT_DIR/nostro0_l${lambda}_ts${TSLOT}_bi${BATT_INIT}.data"
+						echo "$TSLOT $RISNOSTRO0" >> "$OUTPUT_DIR/nostro0_s${sensors}_l${lambda}_bi${BATT_INIT}.data"
+						echo "$BATT_INIT $RISNOSTRO0" >> "$OUTPUT_DIR/nostro0_s${sensors}_ts${TSLOT}_l${lambda}.data"
+						
+						echo "$lambda $RISNOSTRO1" >> "$OUTPUT_DIR/nostro1_s${sensors}_ts${TSLOT}_bi${BATT_INIT}.data"
+						echo "$sensors $RISNOSTRO1" >> "$OUTPUT_DIR/nostro1_l${lambda}_ts${TSLOT}_bi${BATT_INIT}.data"
+						echo "$TSLOT $RISNOSTRO1" >> "$OUTPUT_DIR/nostro1_s${sensors}_l${lambda}_bi${BATT_INIT}.data"
+						echo "$BATT_INIT $RISNOSTRO1" >> "$OUTPUT_DIR/nostro1_s${sensors}_ts${TSLOT}_l${lambda}.data"
 						
 						echo "$lambda $RISNOCLUST" >> "$OUTPUT_DIR/noclust_s${sensors}_ts${TSLOT}_bi${BATT_INIT}.data"
 						echo "$sensors $RISNOCLUST" >> "$OUTPUT_DIR/noclust_l${lambda}_ts${TSLOT}_bi${BATT_INIT}.data"

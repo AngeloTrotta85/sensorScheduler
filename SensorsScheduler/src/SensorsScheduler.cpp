@@ -82,6 +82,7 @@ int main(int argc, char **argv) {
 	double selfDischarge = 1;
 	double tslot = 1;
 	long double selfDischargePerSlot = 1;
+	bool dynamicST = false;
 
 	//cout << "Begin!!!" << endl;
 
@@ -101,10 +102,16 @@ int main(int argc, char **argv) {
 	const std::string &random_str = input.getCmdOption("-rand");
 	const std::string &selfDischarge_str = input.getCmdOption("-sd");
 	const std::string &timeSlot_str = input.getCmdOption("-ts");
+	const std::string &dynamicST_str = input.getCmdOption("-stDy");
 
 	if (!random_str.empty()) {
 		int tmp = atoi(random_str.c_str());
 		randomSim = tmp != 0;
+	}
+
+	if (!dynamicST_str.empty()) {
+		int tmp = atoi(dynamicST_str.c_str());
+		dynamicST = tmp != 0;
 	}
 
 	if (!onlySWstr.empty()) {
@@ -179,13 +186,21 @@ int main(int argc, char **argv) {
 
 		selfDischargePerSlot = powl(selfDischargeRatio, 1.0 / slotsPerMonth);
 
-		//cout << "selfDischargeRatio: " << selfDischargeRatio << " -  slotsPerMonth: " << slotsPerMonth << endl;
-		//fprintf (stdout, "Self-discharge per slot: %Lf\n", selfDischargePerSlot);
-		//cout << "Self-discharge per slot: " << selfDischargePerSlot << endl;
+		if (debugPrint) {
+			cout << "selfDischargeRatio: " << selfDischargeRatio << " -  slotsPerMonth: " << slotsPerMonth << endl;
+			fprintf (stdout, "Self-discharge per slot: %.80Lf\n", selfDischargePerSlot);
+			//cout << "Self-discharge per slot: " << selfDischargePerSlot << endl;
+		}
 		//exit(0);
 	}
 	else {
 		selfDischargePerSlot = 1.0;
+	}
+
+	if ((!onlySW) && (!onlyLP)) {
+		if (estb >= eboot) {
+			onlySW = true;
+		}
 	}
 
 	estbLP = estb;
@@ -285,6 +300,13 @@ int main(int argc, char **argv) {
 			}
 
 			// remove the self-discharging
+			/*for (unsigned int j = 0; j < vecSensors.size(); ++j) {
+				unsigned long int before = vecSensors[j].first;
+				vecSensors[j].first = (long double)(((long double) before) * selfDischargePerSlot);
+				if (vecSensors[j].first > before) {
+					vecSensors[j].first = 0;
+				}
+			}*/
 			for (unsigned int j = 0; j < vecSensors.size(); ++j) {
 				vecSensors[j].first = (long double)(((long double) vecSensors[j].first) * selfDischargePerSlot);
 			}
@@ -320,8 +342,15 @@ int main(int argc, char **argv) {
 
 			for (int i = 0; i < k; ++i) {
 				int idxB, idxE;
-				idxB = i * lam;
-				if ((i == k-1) && (n4clusterPlus != lam)) {
+				if (i == 0) {
+					idxB = 0;
+				}
+				else {
+					idxB = n4clusterPlus + (i-1) * lam;
+				}
+				//idxB = i * lam;
+				if ((i == 0) && (n4clusterPlus != lam)) {
+				//if ((i == k-1) && (n4clusterPlus != lam)) {
 					//int st = (einit - eboot) / (lam * (estb + eon));
 					int st = (einit - eboot) / (lam * (estb + eon));
 					if (onlyLP) {
@@ -330,6 +359,9 @@ int main(int argc, char **argv) {
 						if (debugPrint) {
 							cout << "ST: " << st << endl;
 						}
+					}
+					if (debugPrint) {
+						cout << "ST " << idxB << "-th " << st << endl;
 					}
 					int newIB, newIE, lastIB;
 
@@ -343,7 +375,8 @@ int main(int argc, char **argv) {
 					vecSensors[j] -= eboot;
 				}*/
 
-					while (newIB < s) {
+					while (newIB < n4clusterPlus) {
+					//while (newIB < s) {
 
 						for (int j = 0; j < st; ++j) {
 							bool okRound = true;
@@ -380,6 +413,13 @@ int main(int argc, char **argv) {
 								}
 
 								// remove the self-discharging
+								/*for (unsigned int j = 0; j < vecSensors.size(); ++j) {
+									unsigned long int before = vecSensors[j];
+									vecSensors[j] = (long double)(((long double) before) * selfDischargePerSlot);
+									if (vecSensors[j] > before) {
+										vecSensors[j] = 0;
+									}
+								}*/
 								for (unsigned int j = 0; j < vecSensors.size(); ++j) {
 									vecSensors[j] = (long double)(((long double) vecSensors[j]) * selfDischargePerSlot);
 								}
@@ -391,11 +431,55 @@ int main(int argc, char **argv) {
 
 						++newIB;
 						++newIE;
-						if (newIE >= s) {
-							newIE = ((newIE-idxB) % n4clusterPlus) + idxB;
+						if (newIE >= n4clusterPlus) {
+							newIE = newIE % n4clusterPlus;
 						}
-						if (newIB < s) {
-							vecSensors[newIE] -= eboot;
+						/*if (newIE >= s) {
+							newIE = ((newIE-idxB) % n4clusterPlus) + idxB;
+						}*/
+
+						/*if ((dynamicST) && (newIE >= lam)) {
+							int old_st = st;
+							st = (vecSensors[newIE] - eboot) / (lam * (estb + eon));
+							if (debugPrint) {
+								cout << "ST Ratio " << idxB << "-th " << ((double)st) / ((double)old_st) << endl;
+							}
+						}*/
+						if (newIE == (lam - 1)) {
+							dynamicST = false;
+						}
+						if (dynamicST) {
+							int old_st = st;
+							//fprintf(stdout, "Old ST: %i; ei:%lu; eb:%lu; newIE:%i\n", old_st, vecSensors[newIE], eboot, newIE);fflush(stdout);
+							if (newIE >= lam) {
+								st = (vecSensors[newIE] - eboot) / (lam * (estb + eon));
+							}
+							else {
+								//cout << "Val denominatore " << (lam - newIE - 1) << endl;
+								//st = (vecSensors[newIE] - eboot) / ((lam - newIE - 1) * (estb + eon));
+								st = (vecSensors[(n4clusterPlus-1)] - eboot) / ((lam - newIE - 1) * (estb + eon));
+							}
+							//fprintf(stdout, "New ST: %i\n\n", st);fflush(stdout);
+							if (debugPrint) {
+								if (old_st > 0) {
+									cout << "ST Ratio " << idxB << "-th " << ((double)st) / ((double)old_st) << endl;
+								}
+							}
+						}
+
+						if (debugPrint) {
+							cout << "ST " << newIB << "-th " << st << endl;
+						}
+
+						if (newIB < n4clusterPlus) {
+						//if (newIB < s) {
+							//vecSensors[newIE] -= eboot;
+							if (vecSensors[newIE] <= eboot) {
+								vecSensors[newIE] = 0;
+							}
+							else {
+								vecSensors[newIE] -= eboot;
+							}
 						}
 					}
 
