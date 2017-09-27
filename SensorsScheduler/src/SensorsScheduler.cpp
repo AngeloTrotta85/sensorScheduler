@@ -181,7 +181,7 @@ int main(int argc, char **argv) {
 
 	if (selfDischarge > 0) {
 		// selfDischarge is per months
-		long double selfDischargeRatio = selfDischarge / 100.0;
+		long double selfDischargeRatio = (100.0 - selfDischarge) / 100.0;
 		long double slotsPerMonth = (30.0 * 24.0 * 60.0 * 60.0) / tslot;
 
 		selfDischargePerSlot = powl(selfDischargeRatio, 1.0 / slotsPerMonth);

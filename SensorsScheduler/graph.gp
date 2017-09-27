@@ -57,7 +57,8 @@ set output "lt-l4_ts60_bi500.eps"
 set xlabel "Sensors number"
 # calculus: ((((val * ts=60)sec / 60)min / 60)hours / 24)days = (val / 1440)days
 plot \
-"stats/nostro_l4_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Nostro" lw 4, \
+"stats/nostro0_l4_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Nostro0" lw 4, \
+"stats/nostro1_l4_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Nostro1" lw 4, \
 "stats/noclust_l4_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "NoClust" lw 4, \
 "stats/onlysw_l4_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "OnlySW" lw 4, \
 "stats/onlylp_l4_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "OnlyLP" lw 4, \
