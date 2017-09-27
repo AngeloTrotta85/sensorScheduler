@@ -61,7 +61,7 @@ do
 				for EON in 494
 				do			
 					ESTB_uW=10	
-					TSLOT_VAR="1 10 60 600"
+					TSLOT_VAR="1 10 60 600 900 1200"
 					#TSLOT_VAR="500 750 1000"
 					
 					#ESTB_60=`echo $(( ESTB_uW * 60 ))`
