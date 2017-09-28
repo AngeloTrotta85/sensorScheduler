@@ -62,6 +62,29 @@ void printVec2(bool p, int t, std::vector<std::pair<unsigned long int, bool> > &
 	}
 }
 
+int calcST(long double ei, long double eo, long double es, long double eb, long double selfDischargePerSlot, long double lam) {
+	//long double ei, eo, es, eb, selfDischargePerSlot, lam;
+	long double tmp;
+
+	long double st = (ei - eb) / (lam * (es + eo));
+
+	//cout << "Original" << " ST: " << st << endl;
+
+	tmp = 0;
+	for (int i = 0 ; i < 200; ++i) {
+		long double old_st = st;
+
+		st = (ei - eb - tmp) / (lam * (es + eo));
+		st = st + old_st / 2.0;
+
+		tmp = ei - (ei * powl(selfDischargePerSlot, st));
+
+		//cout << i << " ST: " << st << " - loss sd: " << tmp << " - diff-st: " << st - old_st << endl;
+	}
+
+	return ((int) st);
+}
+
 int main(int argc, char **argv) {
 	int lam = 1;
 	int s = 1;
@@ -83,6 +106,7 @@ int main(int argc, char **argv) {
 	double tslot = 1;
 	long double selfDischargePerSlot = 1;
 	bool dynamicST = false;
+	int dynamicType = 0;
 
 	//cout << "Begin!!!" << endl;
 
@@ -112,6 +136,7 @@ int main(int argc, char **argv) {
 	if (!dynamicST_str.empty()) {
 		int tmp = atoi(dynamicST_str.c_str());
 		dynamicST = tmp != 0;
+		dynamicType = tmp;
 	}
 
 	if (!onlySWstr.empty()) {
@@ -353,6 +378,9 @@ int main(int argc, char **argv) {
 				//if ((i == k-1) && (n4clusterPlus != lam)) {
 					//int st = (einit - eboot) / (lam * (estb + eon));
 					int st = (einit - eboot) / (lam * (estb + eon));
+					if (dynamicST && (dynamicType == 2)) {
+						st = calcST(einit, eon, estb, eboot, selfDischargePerSlot, lam);
+					}
 					if (onlyLP) {
 						//st = (einit - eboot) / (lam * (estbLP + eon));
 						st = vecSensors[idxB] / (lam * (estbLP + eon));
@@ -452,12 +480,22 @@ int main(int argc, char **argv) {
 							int old_st = st;
 							//fprintf(stdout, "Old ST: %i; ei:%lu; eb:%lu; newIE:%i\n", old_st, vecSensors[newIE], eboot, newIE);fflush(stdout);
 							if (newIE >= lam) {
-								st = (vecSensors[newIE] - eboot) / (lam * (estb + eon));
+								if (dynamicType == 1) {
+									st = (vecSensors[newIE] - eboot) / (lam * (estb + eon));
+								}
+								else { //if (dynamicType == 2) {
+									st = calcST(vecSensors[newIE], eon, estb, eboot, selfDischargePerSlot, lam);
+								}
 							}
 							else {
 								//cout << "Val denominatore " << (lam - newIE - 1) << endl;
-								//st = (vecSensors[newIE] - eboot) / ((lam - newIE - 1) * (estb + eon));
-								st = (vecSensors[(n4clusterPlus-1)] - eboot) / ((lam - newIE - 1) * (estb + eon));
+								if (dynamicType == 1) {
+									//st = (vecSensors[newIE] - eboot) / ((lam - newIE - 1) * (estb + eon));
+									st = (vecSensors[(n4clusterPlus-1)] - eboot) / ((lam - newIE - 1) * (estb + eon));
+								}
+								else { //if (dynamicType == 2) {
+									st = calcST(vecSensors[(n4clusterPlus-1)], eon, estb, eboot, selfDischargePerSlot, (lam - newIE - 1));
+								}
 							}
 							//fprintf(stdout, "New ST: %i\n\n", st);fflush(stdout);
 							if (debugPrint) {
