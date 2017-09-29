@@ -75,7 +75,7 @@ int calcST(long double ei, long double eo, long double es, long double eb, long 
 		long double old_st = st;
 
 		st = (ei - eb - tmp) / (lam * (es + eo));
-		st = st + old_st / 2.0;
+		st = (st + old_st) / 2.0;
 
 		tmp = ei - (ei * powl(selfDischargePerSlot, st));
 

@@ -59,6 +59,7 @@ set xlabel "Sensors number"
 plot \
 "stats/nostro0_l3_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Nostro0" lw 4, \
 "stats/nostro1_l3_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Nostro1" lw 4, \
+"stats/nostro2_l3_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Nostro2" lw 4, \
 "stats/noclust_l3_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "NoClust" lw 4, \
 "stats/onlysw_l3_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "OnlySW" lw 4, \
 "stats/onlylp_l3_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "OnlyLP" lw 4, \
@@ -70,6 +71,7 @@ set xlabel "Sensors number"
 plot \
 "stats/nostro0_l3_ts10_bi300.data" using 1:(($2*1)/8640) with lines t "Nostro0" lw 4, \
 "stats/nostro1_l3_ts10_bi300.data" using 1:(($2*1)/8640) with lines t "Nostro1" lw 4, \
+"stats/nostro2_l3_ts10_bi300.data" using 1:(($2*1)/8640) with lines t "Nostro2" lw 4, \
 "stats/noclust_l3_ts10_bi300.data" using 1:(($2*1)/8640) with lines t "NoClust" lw 4, \
 "stats/onlysw_l3_ts10_bi300.data" using 1:(($2*1)/8640) with lines t "OnlySW" lw 4, \
 "stats/onlylp_l3_ts10_bi300.data" using 1:(($2*1)/8640) with lines t "OnlyLP" lw 4, \
@@ -82,6 +84,7 @@ set xlabel "Sensors number"
 plot \
 "stats/nostro0_l3_ts600_bi300.data" using 1:(($2*6)/864) with lines t "Nostro0" lw 4, \
 "stats/nostro1_l3_ts600_bi300.data" using 1:(($2*6)/864) with lines t "Nostro1" lw 4, \
+"stats/nostro2_l3_ts600_bi300.data" using 1:(($2*6)/864) with lines t "Nostro2" lw 4, \
 "stats/noclust_l3_ts600_bi300.data" using 1:(($2*6)/864) with lines t "NoClust" lw 4, \
 "stats/onlysw_l3_ts600_bi300.data" using 1:(($2*6)/864) with lines t "OnlySW" lw 4, \
 "stats/onlylp_l3_ts600_bi300.data" using 1:(($2*6)/864) with lines t "OnlyLP" lw 4, \
@@ -94,6 +97,7 @@ set xlabel "Sensors number"
 plot \
 "stats/nostro0_l3_ts60_bi300.data" using 1:(($2*6)/8640) with lines t "Nostro0" lw 4, \
 "stats/nostro1_l3_ts60_bi300.data" using 1:(($2*6)/8640) with lines t "Nostro1" lw 4, \
+"stats/nostro2_l3_ts60_bi300.data" using 1:(($2*6)/8640) with lines t "Nostro2" lw 4, \
 "stats/noclust_l3_ts60_bi300.data" using 1:(($2*6)/8640) with lines t "NoClust" lw 4, \
 "stats/onlysw_l3_ts60_bi300.data" using 1:(($2*6)/8640) with lines t "OnlySW" lw 4, \
 "stats/onlylp_l3_ts60_bi300.data" using 1:(($2*6)/8640) with lines t "OnlyLP" lw 4, \
@@ -106,6 +110,7 @@ set xlabel "Sensors number"
 plot \
 "stats/nostro0_s11_ts1_l3.data" using 1:(($2*1)/86400) with linespoints t "Nostro0" lw 4, \
 "stats/nostro1_s11_ts1_l3.data" using 1:(($2*1)/86400) with linespoints t "Nostro1" lw 4, \
+"stats/nostro2_s11_ts1_l3.data" using 1:(($2*1)/86400) with linespoints t "Nostro2" lw 4, \
 "stats/noclust_s11_ts1_l3.data" using 1:(($2*1)/86400) with linespoints t "NoClust" lw 4, \
 "stats/onlysw_s11_ts1_l3.data" using 1:(($2*1)/86400) with linespoints t "OnlySW" lw 4, \
 "stats/onlylp_s11_ts1_l3.data" using 1:(($2*1)/86400) with linespoints t "OnlyLP" lw 4, \
@@ -118,6 +123,7 @@ set xlabel "Sensors number"
 plot \
 "stats/nostro0_s11_ts60_l3.data" using 1:(($2*6)/8640) with linespoints t "Nostro0" lw 4, \
 "stats/nostro1_s11_ts60_l3.data" using 1:(($2*6)/8640) with linespoints t "Nostro1" lw 4, \
+"stats/nostro2_s11_ts60_l3.data" using 1:(($2*6)/8640) with linespoints t "Nostro2" lw 4, \
 "stats/noclust_s11_ts60_l3.data" using 1:(($2*6)/8640) with linespoints t "NoClust" lw 4, \
 "stats/onlysw_s11_ts60_l3.data" using 1:(($2*6)/8640) with linespoints t "OnlySW" lw 4, \
 "stats/onlylp_s11_ts60_l3.data" using 1:(($2*6)/8640) with linespoints t "OnlyLP" lw 4, \
