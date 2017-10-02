@@ -8,7 +8,7 @@ VOLT_BATT=$3
 #OUTPUT_DIR="stats"
 OUTPUT_DIR=$4
 
-if [ $# -ne 2 ]
+if [ $# -ne 4 ]
 then
 	echo "Usage: $0 initLambda skipLambda"
 fi
