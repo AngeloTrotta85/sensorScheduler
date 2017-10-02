@@ -1,10 +1,12 @@
 #! /bin/bash
 
-OUTPUT_DIR="stats"
+
 EXEC="Release/SensorsScheduler"
 INIT_LAMBDA=$1
 STEP_LAMBDA=$2
 VOLT_BATT=$3
+#OUTPUT_DIR="stats"
+OUTPUT_DIR=$4
 
 if [ $# -ne 2 ]
 then
