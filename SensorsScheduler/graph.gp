@@ -90,6 +90,18 @@ plot \
 "stats/onlylp_l3_ts600_bi300.data" using 1:(($2*6)/864) with lines t "OnlyLP" lw 4, \
 "stats/rand_l3_ts600_bi300.data" using 1:(($2*6)/864) with lines t "Random" lw 4
 
+set output "lt-l3_ts900_bi300.eps"
+set xlabel "Sensors number"
+# calculus: ((((val * ts=60)sec / 60)min / 60)hours / 24)days = (val / 1440)days
+plot \
+"stats/nostro0_l3_ts900_bi300.data" using 1:(($2*9)/864) with lines t "Nostro0" lw 4, \
+"stats/nostro1_l3_ts900_bi300.data" using 1:(($2*9)/864) with lines t "Nostro1" lw 4, \
+"stats/nostro2_l3_ts900_bi300.data" using 1:(($2*9)/864) with lines t "Nostro2" lw 4, \
+"stats/noclust_l3_ts900_bi300.data" using 1:(($2*9)/864) with lines t "NoClust" lw 4, \
+"stats/onlysw_l3_ts900_bi300.data" using 1:(($2*9)/864) with lines t "OnlySW" lw 4, \
+"stats/onlylp_l3_ts900_bi300.data" using 1:(($2*9)/864) with lines t "OnlyLP" lw 4, \
+"stats/rand_l3_ts900_bi300.data" using 1:(($2*9)/864) with lines t "Random" lw 4
+
 
 set output "lt-l3_ts60_bi300.eps"
 set xlabel "Sensors number"

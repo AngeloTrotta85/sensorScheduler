@@ -4,6 +4,7 @@ OUTPUT_DIR="stats"
 EXEC="Release/SensorsScheduler"
 INIT_LAMBDA=$1
 STEP_LAMBDA=$2
+VOLT_BATT=$3
 
 if [ $# -ne 2 ]
 then
@@ -50,7 +51,8 @@ do
 		for BATT_INIT in ${BATT_VAR}
 		do
 			#EINIT=`echo "$BATT_INIT * 39.96" | bc -l | awk '{printf "%.0f", $0}'`
-			EINIT=`echo "$BATT_INIT * 26.64" | bc -l | awk '{printf "%.0f", $0}'`
+			#EINIT=`echo "$BATT_INIT * 26.64" | bc -l | awk '{printf "%.0f", $0}'`
+			EINIT=`echo "$BATT_INIT * 3.6 * $VOLT_BATT" | bc -l | awk '{printf "%.0f", $0}'`
 			
 			#for (( EBOOT=20; EBOOT<=100; EBOOT+=20 ))
 			#for (( EBOOT=20; EBOOT<=100; EBOOT+=40 ))
