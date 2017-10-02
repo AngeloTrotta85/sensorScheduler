@@ -13,6 +13,8 @@ then
 	echo "Usage: $0 initLambda skipLambda"
 fi
 
+mkdir $OUTPUT_DIR
+
 EINIT_600=23976
 EINIT_1000=39960
 EINIT_1400=55944
