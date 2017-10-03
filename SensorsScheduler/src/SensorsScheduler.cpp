@@ -102,6 +102,7 @@ int main(int argc, char **argv) {
 	unsigned long int estbLP;
 	bool onlySW = false;
 	bool randomSim = false;
+	bool bestEnergy = false;
 	double selfDischarge = 1;
 	double tslot = 1;
 	long double selfDischargePerSlot = 1;
@@ -127,6 +128,12 @@ int main(int argc, char **argv) {
 	const std::string &selfDischarge_str = input.getCmdOption("-sd");
 	const std::string &timeSlot_str = input.getCmdOption("-ts");
 	const std::string &dynamicST_str = input.getCmdOption("-stDy");
+	const std::string &bestEne_str = input.getCmdOption("-best");
+
+	if (!bestEne_str.empty()) {
+		int tmp = atoi(bestEne_str.c_str());
+		bestEnergy = tmp != 0;
+	}
 
 	if (!random_str.empty()) {
 		int tmp = atoi(random_str.c_str());
@@ -222,7 +229,7 @@ int main(int argc, char **argv) {
 		selfDischargePerSlot = 1.0;
 	}
 
-	if ((!onlySW) && (!onlyLP)) {
+	if ((!onlySW) && (!onlyLP) && (!bestEnergy)) {
 		if (estb >= eboot) {
 			onlySW = true;
 		}
@@ -247,7 +254,65 @@ int main(int argc, char **argv) {
 		n4clusterPlus = s;
 	}
 
-	if (randomSim) {
+	if (bestEnergy) {
+		std::vector<unsigned long int> vecSensors(s, einit);
+
+		printVec(debugPrint, lifetime, vecSensors);
+
+		while ((int)vecSensors.size() >= lam) {
+			std::vector<int> lamIdx(lam, -1);
+
+			for (unsigned int kk = 0; kk < lamIdx.size(); kk++) {
+				lamIdx[kk] = kk;
+			}
+			for (unsigned int kk = lam; kk < vecSensors.size(); kk++) {
+				unsigned int smallerIdx = 0;
+				unsigned long int smallerVal = std::numeric_limits<unsigned long int>::max();
+
+				for (unsigned int kk1 = 0; kk1 < lamIdx.size(); kk1++) {
+					if (vecSensors[lamIdx[kk1]] < smallerVal) {
+						smallerVal = vecSensors[lamIdx[kk1]];
+						smallerIdx = kk1;
+					}
+				}
+
+				if (vecSensors[kk] > smallerVal) {
+					lamIdx[smallerIdx] = kk;
+				}
+			}
+
+			for (auto& ii : lamIdx) {
+				if (vecSensors[ii] <= (eon + eboot)) {
+					vecSensors[ii]= 0;
+				}
+				else {
+					vecSensors[ii] -= eon + eboot;
+				}
+			}
+
+			for (unsigned int j = 0; j < vecSensors.size(); ++j) {
+				vecSensors[j] = (long double)(((long double) vecSensors[j]) * selfDischargePerSlot);
+			}
+
+			++lifetime;
+			printVec(debugPrint, lifetime, vecSensors);
+
+			bool removed;
+			do {
+				removed = false;
+				for (auto it = vecSensors.begin(); it != vecSensors.end(); it++) {
+					if (	(*it) < (eon + eboot) ){
+						vecSensors.erase(it);
+						removed = true;
+						break;
+					}
+				}
+			} while (removed);
+
+		}
+
+	}
+	else if (randomSim) {
 		std::vector<std::pair<unsigned long int, bool> > vecSensors(s, make_pair(einit, false));
 		/*for (auto it = vecSensors.begin(); it != vecSensors.end(); it++) {
 			it->first = einit;

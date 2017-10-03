@@ -53,94 +53,136 @@ set key top left
 set ylabel "Lifetime (days)"
 #set logscale y
 
+set key at -30, 1200
 set output "lt-l3_ts1_bi300.eps"
 set xlabel "Sensors number"
 # calculus: ((((val * ts=60)sec / 60)min / 60)hours / 24)days = (val / 1440)days
 plot \
-"stats/nostro0_l3_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Nostro0" lw 4, \
-"stats/nostro1_l3_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Nostro1" lw 4, \
-"stats/nostro2_l3_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Nostro2" lw 4, \
-"stats/noclust_l3_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "NoClust" lw 4, \
-"stats/onlysw_l3_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "OnlySW" lw 4, \
-"stats/onlylp_l3_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "OnlyLP" lw 4, \
+"stats/nostro2_l3_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Algo2" lw 4, \
+"stats/onlysw_l3_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Only-SW" lw 4, \
+"stats/onlylp_l3_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Only-LP" lw 4, \
 "stats/rand_l3_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Random" lw 4
 
-set output "lt-l3_ts10_bi300.eps"
+
+set key at -30, 900
+set output "lt-l6_ts1_bi300.eps"
 set xlabel "Sensors number"
 # calculus: ((((val * ts=60)sec / 60)min / 60)hours / 24)days = (val / 1440)days
 plot \
-"stats/nostro0_l3_ts10_bi300.data" using 1:(($2*1)/8640) with lines t "Nostro0" lw 4, \
-"stats/nostro1_l3_ts10_bi300.data" using 1:(($2*1)/8640) with lines t "Nostro1" lw 4, \
-"stats/nostro2_l3_ts10_bi300.data" using 1:(($2*1)/8640) with lines t "Nostro2" lw 4, \
-"stats/noclust_l3_ts10_bi300.data" using 1:(($2*1)/8640) with lines t "NoClust" lw 4, \
-"stats/onlysw_l3_ts10_bi300.data" using 1:(($2*1)/8640) with lines t "OnlySW" lw 4, \
-"stats/onlylp_l3_ts10_bi300.data" using 1:(($2*1)/8640) with lines t "OnlyLP" lw 4, \
-"stats/rand_l3_ts10_bi300.data" using 1:(($2*1)/8640) with lines t "Random" lw 4
+"stats/nostro2_l6_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Algo2" lw 4, \
+"stats/onlysw_l6_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Only-SW" lw 4, \
+"stats/onlylp_l6_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Only-LP" lw 4, \
+"stats/rand_l6_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Random" lw 4
 
 
+set key at -30, 2600
 set output "lt-l3_ts600_bi300.eps"
 set xlabel "Sensors number"
 # calculus: ((((val * ts=60)sec / 60)min / 60)hours / 24)days = (val / 1440)days
 plot \
-"stats/nostro0_l3_ts600_bi300.data" using 1:(($2*6)/864) with lines t "Nostro0" lw 4, \
-"stats/nostro1_l3_ts600_bi300.data" using 1:(($2*6)/864) with lines t "Nostro1" lw 4, \
-"stats/nostro2_l3_ts600_bi300.data" using 1:(($2*6)/864) with lines t "Nostro2" lw 4, \
-"stats/noclust_l3_ts600_bi300.data" using 1:(($2*6)/864) with lines t "NoClust" lw 4, \
-"stats/onlysw_l3_ts600_bi300.data" using 1:(($2*6)/864) with lines t "OnlySW" lw 4, \
-"stats/onlylp_l3_ts600_bi300.data" using 1:(($2*6)/864) with lines t "OnlyLP" lw 4, \
-"stats/rand_l3_ts600_bi300.data" using 1:(($2*6)/864) with lines t "Random" lw 4
+"stats/nostro2_l3_ts600_bi300.data" using 1:(($2*600)/86400) with lines t "Algo2" lw 4, \
+"stats/onlysw_l3_ts600_bi300.data" using 1:(($2*600)/86400) with lines t "Only-SW" lw 4, \
+"stats/onlylp_l3_ts600_bi300.data" using 1:(($2*600)/86400) with lines t "Only-LP" lw 4, \
+"stats/rand_l3_ts600_bi300.data" using 1:(($2*600)/86400) with lines t "Random" lw 4
 
-set output "lt-l3_ts900_bi300.eps"
+
+set key at -30, 2400
+set output "lt-l6_ts600_bi300.eps"
 set xlabel "Sensors number"
 # calculus: ((((val * ts=60)sec / 60)min / 60)hours / 24)days = (val / 1440)days
 plot \
-"stats/nostro0_l3_ts900_bi300.data" using 1:(($2*9)/864) with lines t "Nostro0" lw 4, \
-"stats/nostro1_l3_ts900_bi300.data" using 1:(($2*9)/864) with lines t "Nostro1" lw 4, \
-"stats/nostro2_l3_ts900_bi300.data" using 1:(($2*9)/864) with lines t "Nostro2" lw 4, \
-"stats/noclust_l3_ts900_bi300.data" using 1:(($2*9)/864) with lines t "NoClust" lw 4, \
-"stats/onlysw_l3_ts900_bi300.data" using 1:(($2*9)/864) with lines t "OnlySW" lw 4, \
-"stats/onlylp_l3_ts900_bi300.data" using 1:(($2*9)/864) with lines t "OnlyLP" lw 4, \
-"stats/rand_l3_ts900_bi300.data" using 1:(($2*9)/864) with lines t "Random" lw 4
+"stats/nostro2_l6_ts600_bi300.data" using 1:(($2*600)/86400) with lines t "Algo2" lw 4, \
+"stats/onlysw_l6_ts600_bi300.data" using 1:(($2*600)/86400) with lines t "Only-SW" lw 4, \
+"stats/onlylp_l6_ts600_bi300.data" using 1:(($2*600)/86400) with lines t "Only-LP" lw 4, \
+"stats/rand_l6_ts600_bi300.data" using 1:(($2*600)/86400) with lines t "Random" lw 4
 
 
-set output "lt-l3_ts60_bi300.eps"
-set xlabel "Sensors number"
+
+
+reset
+
+set autoscale
+set xtic auto
+
+set xlabel font ",22"
+set ylabel font ",22"
+set ylabel "Lifetime (days)"
+
+set key font ",22"
+set key spacing 1.75
+set key width 12
+
+set terminal postscript eps enhanced color font "Times"
+
+
+set key top right
+set xlabel "{/Symbol l}"
+show key
 # calculus: ((((val * ts=60)sec / 60)min / 60)hours / 24)days = (val / 1440)days
+
+set output "lt-s60_ts1_bi300.eps"
 plot \
-"stats/nostro0_l3_ts60_bi300.data" using 1:(($2*6)/8640) with lines t "Nostro0" lw 4, \
-"stats/nostro1_l3_ts60_bi300.data" using 1:(($2*6)/8640) with lines t "Nostro1" lw 4, \
-"stats/nostro2_l3_ts60_bi300.data" using 1:(($2*6)/8640) with lines t "Nostro2" lw 4, \
-"stats/noclust_l3_ts60_bi300.data" using 1:(($2*6)/8640) with lines t "NoClust" lw 4, \
-"stats/onlysw_l3_ts60_bi300.data" using 1:(($2*6)/8640) with lines t "OnlySW" lw 4, \
-"stats/onlylp_l3_ts60_bi300.data" using 1:(($2*6)/8640) with lines t "OnlyLP" lw 4, \
-"stats/rand_l3_ts60_bi300.data" using 1:(($2*6)/8640) with lines t "Random" lw 4
+"stats/nostro2_s60_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Algo2" lw 4, \
+"stats/onlysw_s60_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Only-SW" lw 4, \
+"stats/onlylp_s60_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Only-LP" lw 4, \
+"stats/rand_s60_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Random" lw 4
 
 
-set output "lt-s11_ts1_l3.eps"
-set xlabel "Sensors number"
+set output "lt-s100_ts1_bi300.eps"
+plot \
+"stats/nostro2_s100_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Algo2" lw 4, \
+"stats/onlysw_s100_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Only-SW" lw 4, \
+"stats/onlylp_s100_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Only-LP" lw 4, \
+"stats/rand_s100_ts1_bi300.data" using 1:(($2*1)/86400) with lines t "Random" lw 4
+
+set yrange [0 : 2500]
+set key bottom right
+
+set output "lt-s60_ts600_bi300.eps"
+plot \
+"stats/nostro2_s60_ts600_bi300.data" using 1:(($2*600)/86400) with lines t "Algo2" lw 4, \
+"stats/onlysw_s60_ts600_bi300.data" using 1:(($2*600)/86400) with lines t "Only-SW" lw 4, \
+"stats/onlylp_s60_ts600_bi300.data" using 1:(($2*600)/86400) with lines t "Only-LP" lw 4, \
+"stats/rand_s60_ts600_bi300.data" using 1:(($2*600)/86400) with lines t "Random" lw 4
+
+
+set output "lt-s100_ts600_bi300.eps"
+plot \
+"stats/nostro2_s100_ts600_bi300.data" using 1:(($2*600)/86400) with lines t "Algo2" lw 4, \
+"stats/onlysw_s100_ts600_bi300.data" using 1:(($2*600)/86400) with lines t "Only-SW" lw 4, \
+"stats/onlylp_s100_ts600_bi300.data" using 1:(($2*600)/86400) with lines t "Only-LP" lw 4, \
+"stats/rand_s100_ts600_bi300.data" using 1:(($2*600)/86400) with lines t "Random" lw 4
+
+
+
+
+reset
+
+set autoscale
+set xtic auto
+
+set xlabel font ",22"
+set ylabel font ",22"
+set ylabel "Lifetime (days)"
+
+set key font ",22"
+set key spacing 1.75
+set key width 12
+
+set terminal postscript eps enhanced color font "Times"
+
+
+set key top right
+set xlabel "t_{slot}"
+show key
 # calculus: ((((val * ts=60)sec / 60)min / 60)hours / 24)days = (val / 1440)days
+
+set output "lt-s60_l3_bi300.eps"
 plot \
-"stats/nostro0_s11_ts1_l3.data" using 1:(($2*1)/86400) with linespoints t "Nostro0" lw 4, \
-"stats/nostro1_s11_ts1_l3.data" using 1:(($2*1)/86400) with linespoints t "Nostro1" lw 4, \
-"stats/nostro2_s11_ts1_l3.data" using 1:(($2*1)/86400) with linespoints t "Nostro2" lw 4, \
-"stats/noclust_s11_ts1_l3.data" using 1:(($2*1)/86400) with linespoints t "NoClust" lw 4, \
-"stats/onlysw_s11_ts1_l3.data" using 1:(($2*1)/86400) with linespoints t "OnlySW" lw 4, \
-"stats/onlylp_s11_ts1_l3.data" using 1:(($2*1)/86400) with linespoints t "OnlyLP" lw 4, \
-"stats/rand_s11_ts1_l3.data" using 1:(($2*1)/86400) with linespoints t "Random" lw 4
-
-
-set output "lt-s11_ts60_l3.eps"
-set xlabel "Sensors number"
-# calculus: ((((val * ts=60)sec / 60)min / 60)hours / 24)days = (val / 1440)days
-plot \
-"stats/nostro0_s11_ts60_l3.data" using 1:(($2*6)/8640) with linespoints t "Nostro0" lw 4, \
-"stats/nostro1_s11_ts60_l3.data" using 1:(($2*6)/8640) with linespoints t "Nostro1" lw 4, \
-"stats/nostro2_s11_ts60_l3.data" using 1:(($2*6)/8640) with linespoints t "Nostro2" lw 4, \
-"stats/noclust_s11_ts60_l3.data" using 1:(($2*6)/8640) with linespoints t "NoClust" lw 4, \
-"stats/onlysw_s11_ts60_l3.data" using 1:(($2*6)/8640) with linespoints t "OnlySW" lw 4, \
-"stats/onlylp_s11_ts60_l3.data" using 1:(($2*6)/8640) with linespoints t "OnlyLP" lw 4, \
-"stats/rand_s11_ts60_l3.data" using 1:(($2*6)/8640) with linespoints t "Random" lw 4
-
+"stats/nostro2_s60_l3_bi300.data" using 1:(($2*$1)/86400) with lines t "Algo2" lw 4, \
+"stats/onlysw_s60_l3_bi300.data" using 1:(($2*$1)/86400) with lines t "Only-SW" lw 4, \
+"stats/onlylp_s60_l3_bi300.data" using 1:(($2*$1)/86400) with lines t "Only-LP" lw 4, \
+"stats/rand_s60_l3_bi300.data" using 1:(($2*$1)/86400) with lines t "Random" lw 4
 
 
 

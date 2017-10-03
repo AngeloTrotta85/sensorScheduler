@@ -7,8 +7,9 @@ STEP_LAMBDA=$2
 VOLT_BATT=$3
 #OUTPUT_DIR="stats"
 OUTPUT_DIR=$4
+SELFDISCHARGE_LOSS=$5
 
-if [ $# -ne 4 ]
+if [ $# -ne 5 ]
 then
 	echo "Usage: $0 initLambda skipLambda"
 fi
@@ -47,7 +48,8 @@ do
 		
 		#BATT_VAR="200 600 1000 1400 1800"
 		#BATT_VAR="500 750 1000 1250 1500"
-		BATT_VAR="300 500 700"
+		#BATT_VAR="300 500 700"
+		BATT_VAR="300"
 		
 		#for (( EINIT=1000; EINIT<=5000; EINIT+=1000 ))
 		#for (( EINIT=1000; EINIT<=5000; EINIT+=2000 ))
@@ -104,28 +106,31 @@ do
 						#RISNOSTRO=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 1 -d 0 -sw 0 -lp 0 -sim 1 -sd 8 -ts ${TSLOT}`
 						
 						echo -n "Nostro (dST 0)... "
-						RISNOSTRO0=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 1 -d 0 -sw 0 -lp 0 -sim 1 -sd 8 -ts ${TSLOT} -stDy 0`
+						RISNOSTRO0=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 1 -d 0 -sw 0 -lp 0 -sim 1 -sd ${SELFDISCHARGE_LOSS} -ts ${TSLOT} -stDy 0`
 						
 						echo -n "Nostro (dST 1)... "
-						RISNOSTRO1=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 1 -d 0 -sw 0 -lp 0 -sim 1 -sd 8 -ts ${TSLOT} -stDy 1`
+						RISNOSTRO1=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 1 -d 0 -sw 0 -lp 0 -sim 1 -sd ${SELFDISCHARGE_LOSS} -ts ${TSLOT} -stDy 1`
 						
 						echo -n "Nostro (dST 2)... "
-						RISNOSTRO2=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 1 -d 0 -sw 0 -lp 0 -sim 1 -sd 8 -ts ${TSLOT} -stDy 2`
+						RISNOSTRO2=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 1 -d 0 -sw 0 -lp 0 -sim 1 -sd ${SELFDISCHARGE_LOSS} -ts ${TSLOT} -stDy 2`
 						
 						echo -n "NoClust... "
-						RISNOCLUST=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 0 -d 0 -sw 0 -lp 0 -sim 1 -sd 8 -ts ${TSLOT}`
+						RISNOCLUST=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 0 -d 0 -sw 0 -lp 0 -sim 1 -sd ${SELFDISCHARGE_LOSS} -ts ${TSLOT}`
 						
 						echo -n "OnlySW... "
-						RISSW=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 1 -d 0 -sw 1 -lp 0 -sim 1 -sd 8 -ts ${TSLOT}`
+						RISSW=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 1 -d 0 -sw 1 -lp 0 -sim 1 -sd ${SELFDISCHARGE_LOSS} -ts ${TSLOT}`
 						
 						echo -n "OnlyLP... "
-						RISLP=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 1 -d 0 -sw 0 -lp 1 -sim 1 -sd 8 -ts ${TSLOT}`
+						RISLP=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 1 -d 0 -sw 0 -lp 1 -sim 1 -sd ${SELFDISCHARGE_LOSS} -ts ${TSLOT}`
 						#RISLP=0
 						
 						echo -n "Rand... "
 						#$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -d 0 -rand 1
 						RISRAND=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -d 0 -rand 1 -sd 8 -ts ${TSLOT}`
 						#RISRAND=0
+						
+						echo -n "BestEnergy... "
+						RISBESTENE=`$EXEC -l ${lambda} -s ${sensors} -ei ${EINIT} -eb ${EBOOT} -eo ${EON} -es ${ESTB} -clust 1 -d 0 -sw 0 -lp 0 -sim 1 -sd ${SELFDISCHARGE_LOSS} -ts ${TSLOT} -best 1`
 						
 						echo "OK!"
 						echo ""
@@ -247,6 +252,11 @@ do
 						echo "$sensors $RISRAND" >> "$OUTPUT_DIR/rand_l${lambda}_ts${TSLOT}_bi${BATT_INIT}.data"
 						echo "$TSLOT $RISRAND" >> "$OUTPUT_DIR/rand_s${sensors}_l${lambda}_bi${BATT_INIT}.data"
 						echo "$BATT_INIT $RISRAND" >> "$OUTPUT_DIR/rand_s${sensors}_ts${TSLOT}_l${lambda}.data"
+						
+						echo "$lambda $RISBESTENE" >> "$OUTPUT_DIR/bestene_s${sensors}_ts${TSLOT}_bi${BATT_INIT}.data"
+						echo "$sensors $RISBESTENE" >> "$OUTPUT_DIR/bestene_l${lambda}_ts${TSLOT}_bi${BATT_INIT}.data"
+						echo "$TSLOT $RISBESTENE" >> "$OUTPUT_DIR/bestene_s${sensors}_l${lambda}_bi${BATT_INIT}.data"
+						echo "$BATT_INIT $RISBESTENE" >> "$OUTPUT_DIR/bestene_s${sensors}_ts${TSLOT}_l${lambda}.data"
 						
 					done
 				done
